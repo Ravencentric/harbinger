@@ -114,7 +114,7 @@ def flac(
     from harbinger.utils import globs
     from harbinger.wrappers.flac import FLAC_CODECS, flac
 
-    default_glob = {f"*{codec}" for codec in FLAC_CODECS}
+    default_glob = {f"*{codec}" for codec in FLAC_CODECS} - {".flac"}
 
     if threads is None:
         if cpu := cpu_count():

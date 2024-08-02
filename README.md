@@ -9,11 +9,14 @@ The Decepticon ship that carries weapons of mass destruction.
 
 # Installation
 
-You can use either `pipx` (recommended) or `pip` to install it.
+You can use either [`pipx`](https://pipx.pypa.io/stable/installation/#installing-pipx) (recommended) or `pip` to install it.
 
+```shell
+pipx install harbinger
+```
 ```shell
 pip install harbinger
 ```
 
 # Docs
-Simply run `harbinger <tool> --help` to get the tool specific documentation.
+Simply run `harbinger <weapon> --help` to get the weapon manual.
