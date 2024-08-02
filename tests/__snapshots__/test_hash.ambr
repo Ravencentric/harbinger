@@ -1,0 +1,7 @@
+# serializer version: 1
+# name: test_multiple_hash
+  b'UNLICENSE: 436a6d536138f203ac333858cff92a568be62797752b3adb94bcaa0f6ffe7ef6\r\nUNLICENSE: 436a6d536138f203ac333858cff92a568be62797752b3adb94bcaa0f6ffe7ef6'
+# ---
+# name: test_single_hash
+  b'436a6d536138f203ac333858cff92a568be62797752b3adb94bcaa0f6ffe7ef6'
+# ---

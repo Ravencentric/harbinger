@@ -16,6 +16,8 @@ typing-extensions = "^4.12.2"
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.11.0"
 ruff = "^0.5.4"
+pytest = "^8.3.2"
+syrupy = {version = "^4.6.1", python = "<4"}
 
 [tool.ruff]
 line-length = 120
