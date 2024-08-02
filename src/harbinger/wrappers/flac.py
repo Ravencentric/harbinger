@@ -7,19 +7,12 @@ from loguru import logger
 
 from ..utils import exe
 
-FLAC_CODECS = (".aif", ".aiff", ".wav", ".flac", ".ogg", ".rf64", ".oga")
-COMPRESSION_LEVELS = (0, 1, 2, 3, 4, 5, 6, 7, 8)
-
-
-def is_supported(file: Path) -> bool:
-    return file.suffix.casefold() in FLAC_CODECS
-
 
 def flac(file: Path, compression: int = 8, destination: Path | None = None, wipe_metadata: bool = True) -> Path:
     """
     Thin flac wrapper that adds support for more codecs via an FFmpeg intermediate.
     """
-    if compression not in COMPRESSION_LEVELS:
+    if not 0 <= compression <= 8:
         compression = 8
 
     match destination:
@@ -33,11 +26,12 @@ def flac(file: Path, compression: int = 8, destination: Path | None = None, wipe
 
     logger.info(f"Encoding {file.name} to FLAC...")
 
-    if is_supported(file):
+    try:  # try running natively first
         cmd = [exe("flac"), "-f", f"-{compression}", "-V", file, "-o", destination]
         subprocess.run(cmd, capture_output=True, encoding="utf-8", check=True)  # type: ignore
 
-    else:  # flac doesn't support these codecs so we will use FFmpeg to create an intermediate flac
+    except subprocess.CalledProcessError:
+        # flac doesn't support the given audio file so we will use FFmpeg to create an intermediate flac
         from tempfile import TemporaryDirectory
 
         with TemporaryDirectory(ignore_cleanup_errors=True) as tmpdir:
@@ -56,7 +50,7 @@ def flac(file: Path, compression: int = 8, destination: Path | None = None, wipe
                 tempfile,
             )
 
-            subprocess.run(ffmpeg, capture_output=True, check=True)  # type: ignore
+            subprocess.run(ffmpeg, capture_output=True, check=True)
             cmd = [exe("flac"), "-f", f"-{compression}", "-V", tempfile, "-o", destination]
             subprocess.run(cmd, capture_output=True, check=True)  # type: ignore
 
