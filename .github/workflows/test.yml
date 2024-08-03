@@ -23,7 +23,7 @@ defaults:
 
 jobs:
   test:
-    name: Tests / Windows
+    name: Tests
     strategy:
       fail-fast: false
       matrix:
