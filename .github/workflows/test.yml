@@ -39,6 +39,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install opus-tools and flac
+        run: sudo apt install opus-tools flac
+
       - name: Check versions of required tools
         run: |
           opusenc --version
