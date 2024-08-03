@@ -38,11 +38,18 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install scoop on Windows
-        uses: MinoruSekine/setup-scoop@v4
+      - name: Restore scoop cache # see: .github/workflows/scoopcache.yml
+        uses: actions/cache/restore@v4
+        with:
+          key: scoop
+          path: ~/scoop
 
-      - name: Install required tools on Windows
-        run: scoop install opus-tools ffmpeg flac
+      - name: Update scoop PATH
+        uses: MinoruSekine/setup-scoop@v4
+        with:
+          install_scoop: 'false'
+          scoop_update: 'false'
+          update_path: 'true'
 
       - name: Install pipx
         run: python -m pip install pipx
@@ -55,8 +62,8 @@ jobs:
           poetry config virtualenvs.create true --local
           poetry config virtualenvs.in-project true --local
 
-      - uses: actions/cache@v4
-        name: Define a cache for the venv based on the dependencies lock file
+      - name: Define a cache for the venv based on the dependencies lock file
+        uses: actions/cache@v4
         with:
           key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
           path: ./.venv
