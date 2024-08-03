@@ -1,7 +1,7 @@
 # serializer version: 1
 # name: test_multiple_hash
-  b'UNLICENSE: 436a6d536138f203ac333858cff92a568be62797752b3adb94bcaa0f6ffe7ef6\r\nUNLICENSE: 436a6d536138f203ac333858cff92a568be62797752b3adb94bcaa0f6ffe7ef6'
+  b'Big Buck Bunny - S01E01.ac3: cc42f54bde1b6f2e7e93ab1a74ad0340a1e813f439b48f74d0a287ec83c73e11\r\nBig Buck Bunny - S01E01.ac3: cc42f54bde1b6f2e7e93ab1a74ad0340a1e813f439b48f74d0a287ec83c73e11'
 # ---
 # name: test_single_hash
-  b'436a6d536138f203ac333858cff92a568be62797752b3adb94bcaa0f6ffe7ef6'
+  b'cc42f54bde1b6f2e7e93ab1a74ad0340a1e813f439b48f74d0a287ec83c73e11'
 # ---

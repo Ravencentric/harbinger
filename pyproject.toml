@@ -4,7 +4,7 @@ version = "0.1.1"
 description = "The Decepticon ship that carries weapons of mass destruction."
 authors = ["Ravencentric <me@ravencentric.cc>"]
 readme = "README.md"
-packages = [{include = "harbinger", from = "src"}]
+packages = [{ include = "harbinger", from = "src" }]
 
 [tool.poetry.dependencies]
 python = ">=3.10"
@@ -14,10 +14,10 @@ rich = "^13.7.1"
 typing-extensions = "^4.12.2"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.11.0"
+mypy = "^1.11.1"
 ruff = "^0.5.4"
 pytest = "^8.3.2"
-syrupy = {version = "^4.6.1", python = "<4"}
+syrupy = { version = "^4.6.1", python = "<4" }
 
 [tool.ruff]
 line-length = 120
@@ -29,6 +29,7 @@ fixable = ["ALL"]
 [tool.mypy]
 strict = true
 pretty = true
+exclude = "tests/"
 
 [tool.poetry.scripts]
 harbinger = "harbinger.__main__:app"

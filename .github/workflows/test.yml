@@ -39,6 +39,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Check versions of required tools
+        run: |
+          opusenc --version
+          flac --version
+          ffmpeg -version
+          ffprobe -version
+
       - name: Install pipx
         run: python -m pip install pipx
 
