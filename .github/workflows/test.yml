@@ -39,13 +39,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install scoop
-        run: |
-          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-          Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+      - name: Install scoop and required tools
+        uses: MinoruSekine/setup-scoop@v4
+        with:
+          apps: opus-tools flac ffmpeg
 
-      - name: Install required tools
-        run: scoop install opus-tools flac ffmpeg
 
       - name: Install pipx
         run: python -m pip install pipx

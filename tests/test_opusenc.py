@@ -1,6 +1,7 @@
 import subprocess
 import sys
 from pathlib import Path
+from uuid import uuid4
 
 basedir = Path("tests/__test_data__/").resolve()
 
@@ -10,9 +11,17 @@ def test_opusenc(tmp_path: Path) -> None:
 
     subprocess.run(cmd, check=True)
 
-    control = (basedir / "control.opus").stat().st_size
+    flac_file = tmp_path / f"{uuid4()}.flac"
 
-    print(len(list(tmp_path.glob("*"))))
+    subprocess.run(
+        ("ffmpeg", "-i", basedir / "Big Buck Bunny - S01E01.ac3", "-c:a", "flac", "-compression_level", "0", flac_file)
+    )
+
+    opus_file = tmp_path / f"{uuid4()}.opus"
+
+    subprocess.run(("opusenc", flac_file, "--bitrate", "192", opus_file))
+
+    control = opus_file.stat().st_size
 
     assert (tmp_path / "Big Buck Bunny - S01E01.opus").stat().st_size == control
     assert (tmp_path / "Big Buck Bunny - S01E02.opus").stat().st_size == control
