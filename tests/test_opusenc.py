@@ -1,16 +1,11 @@
 import subprocess
 import sys
-from os import getenv
 from pathlib import Path
 from uuid import uuid4
 
-import pytest
-
 basedir = Path("tests/__test_data__/").resolve()
 
-CI = getenv("CI") == "true" 
 
-@pytest.mark.skipif(CI)
 def test_opusenc(tmp_path: Path) -> None:
     cmd = (sys.executable, "-m", "harbinger", "opus", str(basedir), str(tmp_path), "--glob", "*.ac3")
 
