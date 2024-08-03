@@ -23,7 +23,7 @@ defaults:
 
 jobs:
   test:
-    name: Tests
+    name: Tests / Windows
     strategy:
       fail-fast: false
       matrix:
@@ -41,8 +41,9 @@ jobs:
 
       - name: Install scoop
         uses: MinoruSekine/setup-scoop@v4
-        with:
-          apps: flac ffmpeg opus-tools
+
+      - name: Install tools
+        run: scoop install opus-tools ffmpeg flac
 
       - name: Install pipx
         run: python -m pip install pipx
