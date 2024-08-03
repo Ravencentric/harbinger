@@ -38,18 +38,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Restore scoop cache # see: .github/workflows/scoopcache.yml
-        uses: actions/cache/restore@v4
-        with:
-          key: scoop
-          path: ~/scoop
-
-      - name: Update scoop PATH
+      - name: Install scoop on Windows
         uses: MinoruSekine/setup-scoop@v4
-        with:
-          install_scoop: 'false'
-          scoop_update: 'false'
-          update_path: 'true'
+
+      - name: Install required tools on Windows
+        run: scoop install opus-tools ffmpeg flac
 
       - name: Install pipx
         run: python -m pip install pipx
