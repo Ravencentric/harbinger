@@ -28,8 +28,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ['3.10', '3.11', '3.12']
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,21 +38,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Set up Homebrew
-        if: matrix.os != 'windows-latest'
-        id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
-
-      - name: Install required tools on ${{ runner.os }}
-        if: matrix.os != 'windows-latest'
-        run: brew install opus-tools ffmpeg flac --force-bottle
-
       - name: Install scoop on Windows
-        if: matrix.os == 'windows-latest'
         uses: MinoruSekine/setup-scoop@v4
 
-      - name: Install required tools on ${{ runner.os }}
-        if: matrix.os == 'windows-latest'
+      - name: Install required tools on Windows
         run: scoop install opus-tools ffmpeg flac
 
       - name: Install pipx
@@ -70,7 +58,7 @@ jobs:
       - uses: actions/cache@v4
         name: Define a cache for the venv based on the dependencies lock file
         with:
-          key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+          key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
           path: ./.venv
 
       - name: Install the project dependencies
