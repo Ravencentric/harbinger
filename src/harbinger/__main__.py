@@ -6,12 +6,14 @@ from cyclopts import App, Group
 from cyclopts.types import ResolvedExistingFile, ResolvedExistingPath, ResolvedPath
 from loguru import logger
 
+from .__version__ import __version__
+
 logger.remove()
 logger.add(
     sys.stderr, format="<green>{time:HH:mm:ss}</> | <lvl>{level:<8}</> | <cyan>{function}</> - <lvl>{message}</>"
 )
 
-app = App(name="harbinger", help="The Decepticon ship that carries weapons of mass destruction.")
+app = App(name="harbinger", help="The Decepticon ship that carries weapons of mass destruction.", version=__version__)
 
 app["--help"].group = ""
 app["--version"].group = ""

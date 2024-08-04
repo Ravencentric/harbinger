@@ -19,7 +19,7 @@ def test_opusenc(tmp_path: Path) -> None:
 
     opus_file = tmp_path / f"{uuid4()}.opus"
 
-    subprocess.run(("opusenc", flac_file, "--bitrate", "192", opus_file))
+    subprocess.run(("opusenc", flac_file, "--bitrate", "192", opus_file), check=False)
 
     control = opus_file.stat().st_size
 
