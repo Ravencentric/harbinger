@@ -55,20 +55,9 @@ def opus(
     threads : int, optional
         Number of threads to use for concurrent encoding.
     """
-    from concurrent.futures import ThreadPoolExecutor
+    from harbinger.tools.opusenc import concurrent_opusenc
 
-    from harbinger.utils import globber
-    from harbinger.wrappers.opusenc import opusenc
-
-    if src.is_file():
-        opusenc(src, bitrate, dst)
-    else:
-        with ThreadPoolExecutor(max_workers=threads) as executor:
-            files = globber(src, glob, recursive)
-            for file in files:
-                executor.submit(opusenc, file, bitrate, dst)
-
-            executor.shutdown()
+    concurrent_opusenc(src, dst, bitrate=bitrate, glob=glob, recursive=recursive, threads=threads)
 
 
 @app.command(
@@ -105,20 +94,11 @@ def flac(
     threads : int, optional
         Number of threads to use for concurrent encoding.
     """
-    from concurrent.futures import ThreadPoolExecutor
+    from harbinger.tools.flac import concurrent_flacenc
 
-    from harbinger.utils import globber
-    from harbinger.wrappers.flac import flac
-
-    if src.is_file():
-        flac(src, compression, dst, wipe_metadata)
-    else:
-        with ThreadPoolExecutor(max_workers=threads) as executor:
-            files = globber(src, glob, recursive)
-            for file in files:
-                executor.submit(flac, file, compression, dst, wipe_metadata)
-
-            executor.shutdown()
+    concurrent_flacenc(
+        src, dst, compression=compression, wipe_metadata=wipe_metadata, glob=glob, recursive=recursive, threads=threads
+    )
 
 
 @app.command(name="hash", help="Compute and print the sha256 hash values for the given files.", group=utilities)
@@ -144,34 +124,9 @@ def hash_(
     fullpath : bool, optional
         Print the fullpath alongside the hash.
     """
-    from .utils import filehash
+    from .tools.filehash import multi_filehash
 
-    if len(files) == 1:
-        print(filehash(files[0]))
-    else:
-        from rich import print as richprint
-        from rich.box import MARKDOWN
-        from rich.table import Table
-
-        checksums = []
-        if table:
-            hashtable = Table("file", "sha256", box=MARKDOWN)
-            for file in files:
-                checksum = filehash(file)
-                checksums.append(checksum)
-                hashtable.add_row(file.as_posix() if fullpath else file.name, checksum)
-            richprint(hashtable)
-        else:
-            for file in files:
-                checksum = filehash(file)
-                checksums.append(checksum)
-                print(f"{file.as_posix() if fullpath else file.name}: {checksum}")
-
-        if check:
-            if len(set(checksums)) == 1:
-                richprint(":white_heavy_check_mark: All hashes match!")
-            else:
-                richprint(":warning:  Hash mismatch detected!")  # the double space is artistic intent
+    multi_filehash(files, check=check, table=table, fullpath=fullpath)
 
 
 if __name__ == "__main__":

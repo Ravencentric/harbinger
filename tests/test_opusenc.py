@@ -1,16 +1,13 @@
 import subprocess
-import sys
 from pathlib import Path
 from uuid import uuid4
+
+from harbinger.tools.opusenc import concurrent_opusenc
 
 basedir = Path("tests/__test_data__/").resolve()
 
 
 def test_opusenc(tmp_path: Path) -> None:
-    cmd = (sys.executable, "-m", "harbinger", "opus", str(basedir), str(tmp_path), "--glob", "*.ac3")
-
-    subprocess.run(cmd, check=True)
-
     flac_file = tmp_path / f"{uuid4()}.flac"
 
     subprocess.run(
@@ -23,6 +20,5 @@ def test_opusenc(tmp_path: Path) -> None:
 
     control = opus_file.stat().st_size
 
-    assert (tmp_path / "Big Buck Bunny - S01E01.opus").stat().st_size == control
-    assert (tmp_path / "Big Buck Bunny - S01E02.opus").stat().st_size == control
-    assert (tmp_path / "Big Buck Bunny - S01E03.opus").stat().st_size == control
+    for encoded in concurrent_opusenc(basedir, tmp_path, glob=("*.ac3")):
+        assert encoded.stat().st_size == control
