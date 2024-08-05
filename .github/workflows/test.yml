@@ -24,13 +24,14 @@ defaults:
 jobs:
   test:
     name: Tests
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
     runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install Hatch
-        uses: pypa/hatch@install
 
       - name: Install scoop on Windows
         uses: MinoruSekine/setup-scoop@v4
@@ -38,6 +39,31 @@ jobs:
       - name: Install required tools on Windows
         run: scoop install opus-tools ffmpeg flac
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install pipx
+        run: python -m pip install pipx
+
+      - name: Install poetry
+        run: pipx install poetry
+
+      - name: Setup a local virtual environment
+        run: |
+          poetry config virtualenvs.create true --local
+          poetry config virtualenvs.in-project true --local
+
+      - uses: actions/cache@v4
+        name: Define a cache for the venv based on the dependencies lock file
+        with:
+          key: py${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+          path: ./.venv
+
+      - name: Install the project dependencies
+        run: poetry install
+
       - name: Run tests
-        run: hatch test -all -vv
+        run: pytest -vv
 

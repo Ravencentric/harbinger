@@ -1,14 +1,11 @@
-[project]
+[tool.poetry]
 name = "harbinger"
-dynamic = ["version"]
+version = "0.1.1"
 description = "The Decepticon ship that carries weapons of mass destruction."
+authors = ["Ravencentric <me@ravencentric.cc>"]
 readme = "README.md"
-requires-python = ">=3.10"
-license = "Unlicense"
+packages = [{ include = "harbinger", from = "src" }]
 keywords = ["flac", "opus", "encoder"]
-authors = [
-  { name = "Raventric", email = "me@ravencentric.cc" },
-]
 classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: 3.10",
@@ -16,20 +13,19 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: Implementation :: CPython",
 ]
-dependencies = [
-  "cyclopts~=2.9.4",
-  "loguru~=0.7.2",
-  "rich~=13.7.1",
-  "typing-extensions~=4.12.2",
-]
 
-[project.urls]
-Documentation = "https://github.com/Raventric/harbinger#readme"
-Issues = "https://github.com/Raventric/harbinger/issues"
-Source = "https://github.com/Raventric/harbinger"
+[tool.poetry.dependencies]
+python = ">=3.10"
+cyclopts = "^2.9.4"
+loguru = "^0.7.2"
+rich = "^13.7.1"
+typing-extensions = "^4.12.2"
 
-[project.scripts]
-harbinger = "harbinger.__main__:app"
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.11.1"
+ruff = "^0.5.4"
+pytest = "^8.3.2"
+syrupy = { version = "^4.6.1", python = "<4" }
 
 [tool.ruff]
 line-length = 120
@@ -44,36 +40,9 @@ strict = true
 pretty = true
 exclude = "tests/"
 
-[tool.hatch.version]
-path = "src/harbinger/__version__.py"
-
-[tool.hatch.envs.types]
-extra-dependencies = [
-  "mypy~=1.11.1",
-]
-[tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/harbinger}"
-
-[tool.hatch.envs.hatch-static-analysis]
-config-path = "none"
-
-[tool.hatch.envs.hatch-test]
-extra-dependencies = [
-  'syrupy~=4.6.1; python_version < "4"',
-]
-
-[[tool.hatch.envs.hatch-test.matrix]]
-python = ["3.10", "3.11", "3.12"]
-
-[tool.hatch.build.targets.sdist]
-only-packages = true
-exclude = [
-  "tests/",
-]
-
-[tool.hatch.build.targets.binary]
-scripts = ["harbinger"]
+[tool.poetry.scripts]
+harbinger = "harbinger.__main__:app"
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

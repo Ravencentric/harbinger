@@ -57,8 +57,8 @@ def opus(
     """
     from concurrent.futures import ThreadPoolExecutor
 
+    from harbinger.tools.opusenc import opusenc
     from harbinger.utils import globber
-    from harbinger.wrappers.opusenc import opusenc
 
     if src.is_file():
         opusenc(src, bitrate, dst)
@@ -107,8 +107,8 @@ def flac(
     """
     from concurrent.futures import ThreadPoolExecutor
 
+    from harbinger.tools.flac import flac
     from harbinger.utils import globber
-    from harbinger.wrappers.flac import flac
 
     if src.is_file():
         flac(src, compression, dst, wipe_metadata)
@@ -144,7 +144,7 @@ def hash_(
     fullpath : bool, optional
         Print the fullpath alongside the hash.
     """
-    from .utils import filehash
+    from harbinger.tools.filehash import filehash
 
     if len(files) == 1:
         print(filehash(files[0]))
