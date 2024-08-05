@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import subprocess
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from loguru import logger
 
-from ..utils import exe, globber
+from ..utils import exe
 
 
 def get_audio_channels(audio: Path) -> int:
@@ -89,45 +88,3 @@ def opusenc(file: Path, bitrate: int | None = None, destination: Path | None = N
     logger.success(f"Successfully encoded {file.name} to Opus")
 
     return destination
-
-
-def concurrent_opusenc(
-    src: Path,
-    dst: Path | None = None,
-    /,
-    *,
-    bitrate: int | None = None,
-    glob: tuple[str, ...] = ("*.flac", "*.wav", "*.w64"),
-    recursive: bool = False,
-    threads: int | None = None,
-) -> tuple[Path, ...]:
-    """
-    Opusenc wrapper with concurrent encoding, bitrate selection,
-    and support for more codecs via FFmpeg.
-
-    Parameters
-    ----------
-    src : Path
-        Path to the source directory or file.
-    dst : Path, optional
-        Destination file or directory where transcoded files will be saved.
-    bitrate : int, optional
-        Target bitrate in kbps.
-    glob : tuple[str, ...], optional
-        Patterns to match files in the source directory.
-    recursive : bool, optional
-        Whether to search for files recursively in subdirectories of src.
-    threads : int, optional
-        Number of threads to use for concurrent encoding.
-    """
-
-    if src.is_file():
-        return (opusenc(src, bitrate, dst).resolve(),)
-    else:
-        with ThreadPoolExecutor(max_workers=threads) as executor:
-            files = globber(src, glob, recursive)
-            futures = [executor.submit(opusenc, file, bitrate, dst) for file in files]
-            results = tuple([future.result().resolve() for future in as_completed(futures)])
-            executor.shutdown()
-
-        return results
